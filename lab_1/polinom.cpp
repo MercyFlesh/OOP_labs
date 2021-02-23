@@ -39,14 +39,14 @@ tuple<number, number> Polinom::get_roots() const
 
 ostream& operator<< (ostream& os, const Polinom& p)
 {
-    if (p.p_mode == Canonic)
+    if (p.p_mode == PrintMode::CANONIC)
     {
         try
         {
             auto [root_1, root_2] = p.get_roots();
             if (p.a_ != 1)
                 os << p.a_ << "*";
-            os << showpos << "(x" << root_1 << ")*(x" << root_2 << ")" << noshowpos;
+            os << showpos << "(x" << -root_1 << ")*(x" << -root_2 << ")" << noshowpos;
         }
         catch (const runtime_error& er)
         {

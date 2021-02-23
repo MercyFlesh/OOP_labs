@@ -4,10 +4,11 @@
 #include "number.hpp"
 
 
-enum PrintMode {
-    Classic,
-    Canonic,
+enum class PrintMode {
+    CLASSIC,
+    CANONIC
 };
+
 
 class Polinom
 {
@@ -20,6 +21,6 @@ public:
     friend std::ostream& operator<< (std::ostream& os, const Polinom& p);
 
 private:
-    number a_, b_, c_;
-    PrintMode p_mode = Classic;
+    const number a_, b_, c_;
+    PrintMode p_mode = PrintMode::CLASSIC;
 };
