@@ -37,12 +37,13 @@ void Application::print_roots() const
     {
         auto [root_1, root_2] = Polinom(a, b, c).get_roots();
         if (root_1 == root_2)
-            cout << "x = " << root_1 << endl;
-        cout << "x_1 = " << root_1 << ", x_2 = " << root_2 << endl;
+            cout << "x=" << root_1 << endl;
+        else
+            cout << "x_1=" << root_1 << "; x_2=" << root_2 << endl;
     }
     catch (const runtime_error& er)
     {
-        cerr << "[-] " << er.what() << " : " << a << ", " << b << ", " << c << endl;
+        cerr << "[-] " << er.what() << ": " << a << ", " << b << ", " << c << endl;
     }
 }
 
@@ -81,10 +82,10 @@ int Application::exec()
             case 5:
             {
                 Polinom p(a, b, c);
-                p.set_print_mode(Canonic);
+                p.set_print_mode(PrintMode::CANONIC);
                 cout << p << endl;
-            }    
                 break;
+            }    
             default:
                 break;
         }
