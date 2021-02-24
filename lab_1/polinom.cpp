@@ -1,4 +1,5 @@
 #include "polinom.hpp"
+#include <cmath>
 
 using namespace std;
 

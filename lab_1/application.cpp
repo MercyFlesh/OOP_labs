@@ -51,7 +51,9 @@ void Application::print_roots() const
 void Application::print_value() const
 {
     number x;
+    cout << "x = ";
     cin >> x;
+    
     cout << "p(" << x << ") = " << 
         Polinom(a, b, c).calculate_polinom(x) << endl;
 }
