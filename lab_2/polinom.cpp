@@ -26,12 +26,13 @@ tuple<number, number> Polinom::get_roots() const
 {
     number d = pow(b_, 2) - (static_cast<number>(4) * a_ * c_);
     
-    if (d >= 0 )
+    if (d >= 0)
     {
         number root_1 = (-b_ + sqrt(d)) / (static_cast<number>(2) * a_);
         number root_2 = (-b_ - sqrt(d)) / (static_cast<number>(2) * a_);
-        if (-a_ * (root_1 + root_2) == b_ &&
-            a_ * root_1 * root_2 == c_)
+        
+        if (calculate_polinom(root_1) == 0 &&
+            calculate_polinom(root_2) == 0)
             return { root_1, root_2 };
     }
     
@@ -48,7 +49,7 @@ ostream& operator<< (ostream& os, const Polinom& p)
             auto [root_1, root_2] = p.get_roots();
             if (p.a_ != 1)
                 os << p.a_ << "*";
-            os << showpos << "(x" << -root_1 << ")*(x" << -root_2 << ")" << noshowpos;
+            os << "(x" << showpos << -root_1 << ")*(x" << showpos << -root_2 << ")" << noshowpos;
         }
         catch (const runtime_error& er)
         {
@@ -58,5 +59,7 @@ ostream& operator<< (ostream& os, const Polinom& p)
         return os;
     }
 
-    return os << p.a_ << "x^2" << showpos << p.b_ << "x" << p.c_ << noshowpos;
+    if (p.a_ != 1)
+        os << p.a_;
+    return os << "x^2" << showpos << p.b_ << "x" << showpos << p.c_ << noshowpos;
 }
