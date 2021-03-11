@@ -115,7 +115,7 @@ Rational Rational::operator- () const
 }
 
 
-/*bool Rational::operator== (const Rational& rhs) const
+bool Rational::operator== (const Rational& rhs) const
 {
 	return tie(a_, b_) == tie(rhs.a_, rhs.b_);
 }
@@ -136,24 +136,18 @@ bool Rational::operator< (const Rational& rhs) const
 bool Rational::operator>= (const Rational& rhs) const
 {
 	return (a_ * rhs.b_) >= (rhs.a_ * b_);
-}*/
-
-
-Rational::operator double() const
-{
-	return static_cast<double>(a_) / b_;
 }
 
+
+/*Rational::operator double() const
+{
+	return static_cast<double>(a_) / b_;
+}*/
 
 
 Rational sqrt(const Rational& rt)
 {
-	double a = double(rt);
-	a = sqrt(a);
-	cout << a << endl;
-	Rational r(a);
-	cout << r << endl;
-	return r;
+	return Rational(sqrt(rt.a_), sqrt(rt.b_));
 }
 
 

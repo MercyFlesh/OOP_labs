@@ -23,11 +23,11 @@ public:
 	Rational& operator*= (const Rational& rhs);
 	Rational& operator/= (const Rational& rhs);
 
-	operator double() const;
-	//bool operator== (const Rational& rhs) const;
-	//bool operator!= (const Rational& rhs) const;
-	//bool operator< (const Rational& rhs) const;
-	//bool operator>= (const Rational& rhs) const;
+	//operator double() const;
+	bool operator== (const Rational& rhs) const;
+	bool operator!= (const Rational& rhs) const;
+	bool operator< (const Rational& rhs) const;
+	bool operator>= (const Rational& rhs) const;
 	
 	friend Rational sqrt(const Rational& rt);
 	friend Rational pow(const Rational& rt, const int& power);
