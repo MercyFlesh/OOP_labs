@@ -115,6 +115,9 @@ void Interface::print_value() const
     number val = Polinom(
                 coeffs[0], coeffs[1], coeffs[2]).calculate_polinom(x);
 
+    /*std::stringstream ts;
+    ts << val;
+    QString str(QString::fromStdString(ts.str()));*/
     QString str;
     QTextStream ts(&str);
     ts << val;
@@ -124,17 +127,44 @@ void Interface::print_value() const
 
 void Interface::print_roots() const
 {
+    QString str;
+    QTextStream ts(&str);
+    if (auto opt_roots = Polinom(coeffs[0], coeffs[1], coeffs[2]).get_roots();
+            opt_roots.has_value())
+    {
+        auto [opt_root_1, opt_root_2] = *opt_roots;
 
+        if (opt_root_1.has_value())
+            ts << "x_1=" << *opt_root_1 << "\t";
+
+        if (opt_root_2.has_value())
+            ts << "x_2=" << *opt_root_2;
+     }
+     else
+         ts << "[-] no roots in the given field with this coefficints";
+
+     output->setText(str);
 }
 
 
 void Interface::print_classic() const
 {
+    QString str;
+    QTextStream ts(&str);
+    ts << Polinom(coeffs[0], coeffs[1], coeffs[2]);
 
+    output->setText(str);
 }
 
 
 void Interface::print_cannonic() const
 {
+    Polinom p(coeffs[0], coeffs[1], coeffs[2]);
+    p.set_print_mode(PrintMode::CANONIC);
 
+    QString str;
+    QTextStream ts(&str);
+    ts << p;
+
+    output->setText(str);
 }
