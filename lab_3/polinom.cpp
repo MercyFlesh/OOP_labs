@@ -1,5 +1,6 @@
 #include "polinom.hpp"
 #include <cmath>
+#include <QString>
 
 using namespace std;
 
@@ -74,4 +75,28 @@ ostream& operator<< (ostream& os, const Polinom& p)
     return os << "x^2" << showpos << p.b_ << "x" << showpos << p.c_ << noshowpos;
 }
 
+QTextStream& operator<< (QTextStream& ts, const Polinom& p)
+{
+    if (p.p_mode == PrintMode::CANONIC)
+    {
+        if (auto opt_roots = p.get_roots(); opt_roots.has_value())
+        {
+            auto [opt_root_1, opt_root_2] = *opt_roots;
+            if (opt_root_1.has_value() && opt_root_2.has_value())
+            {
+                if (p.a_ != 1)
+                    ts << p.a_ << "*";
+
+                return ts << "(x" << Qt::forcesign << -(*opt_root_1) << ")*(x" <<
+                             Qt::forcesign << -(*opt_root_2) << ")" << Qt::noforcesign;
+            }
+        }
+
+        return ts << "[-] this polynom cannot be represented on the set of integers in the canonical form";;
+    }
+
+    if (p.a_ != 1)
+        ts << p.a_;
+    return ts << "x^2" << Qt::forcesign << p.b_ << "x" << Qt::forcesign << p.c_ << Qt::noforcesign;
+}
 

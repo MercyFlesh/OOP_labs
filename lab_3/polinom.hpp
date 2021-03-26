@@ -20,6 +20,7 @@ public:
     void set_print_mode(const PrintMode& mode);
 
     friend std::ostream& operator<< (std::ostream& os, const Polinom& p);
+    friend QTextStream& operator<< (QTextStream& ts, const Polinom& p);
 
 private:
     number a_, b_, c_;
