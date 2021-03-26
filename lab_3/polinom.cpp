@@ -22,21 +22,32 @@ void Polinom::set_print_mode(const PrintMode& mode)
 }
 
 
-tuple<number, number> Polinom::get_roots() const
+optional<array<optional<number>, 2>> Polinom::get_roots() const
 {
     number d = pow(b_, 2) - (static_cast<number>(4) * a_ * c_);
+
 
     if (d >= 0)
     {
         number root_1 = (-b_ + sqrt(d)) / (static_cast<number>(2) * a_);
         number root_2 = (-b_ - sqrt(d)) / (static_cast<number>(2) * a_);
+        bool check_root_1 = calculate_polinom(root_1) == 0;
+        bool check_root_2 = calculate_polinom(root_2) == 0;
 
-        if (calculate_polinom(root_1) == 0 &&
-            calculate_polinom(root_2) == 0)
-            return { root_1, root_2 };
+        if (check_root_1 || check_root_2)
+        {
+            array<optional<number>, 2> roots;
+            if (check_root_1)
+                roots[0] = root_1;
+
+            if (check_root_2)
+                roots[1] = root_2;
+
+            return roots;
+        }
     }
 
-    throw runtime_error("incorect coefficients");
+    return nullopt;
 }
 
 
@@ -44,22 +55,23 @@ ostream& operator<< (ostream& os, const Polinom& p)
 {
     if (p.p_mode == PrintMode::CANONIC)
     {
-        try
+        if (auto opt_roots = p.get_roots(); opt_roots.has_value())
         {
-            auto [root_1, root_2] = p.get_roots();
-            if (p.a_ != 1)
-                os << p.a_ << "*";
-            os << "(x" << showpos << -root_1 << ")*(x" << showpos << -root_2 << ")" << noshowpos;
-        }
-        catch (const runtime_error& er)
-        {
-            os << "[-] this polynom cannot be represented on the set of integers in the canonical form";
+            auto [opt_root_1, opt_root_2] = *opt_roots;
+            if (opt_root_1.has_value() && opt_root_2.has_value())
+            {
+                if (p.a_ != 1)
+                    os << p.a_ << "*";
+                return os << "(x" << showpos << -(*opt_root_1) << ")*(x" << showpos << -(*opt_root_2) << ")" << noshowpos;
+            }
         }
 
-        return os;
+        return os << "[-] this polynom cannot be represented on the set of integers in the canonical form";;
     }
 
     if (p.a_ != 1)
         os << p.a_;
     return os << "x^2" << showpos << p.b_ << "x" << showpos << p.c_ << noshowpos;
 }
+
+
