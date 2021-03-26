@@ -141,9 +141,9 @@ Rational sqrt(const Rational& rt)
 }
 
 
-Rational pow(const Rational& rt, const int& power)
+Rational pow(const Rational& base, int exp)
 {
-    return Rational(pow(rt.a_, power), pow(rt.b_, power));
+    return Rational(pow(base.a_, exp), pow(base.b_, exp));
 }
 
 
@@ -169,10 +169,9 @@ ostream& operator<< (ostream& os, const Rational& rt)
 
 QTextStream& operator<< (QTextStream& qs, const Rational& rt)
 {
-    qs << QString().setNum(rt.a_);
+    qs << rt.a_;
     if (rt.b_ != 1)
-         qs << "/" << Qt::noforcesign << QString().setNum(rt.b_);
+         qs << "/" << Qt::noforcesign << rt.b_;
 
     return qs;
 }
-

@@ -32,7 +32,7 @@ public:
     bool operator>= (const Rational& rhs) const;
 
     friend Rational sqrt(const Rational& rt);
-    friend Rational pow(const Rational& rt, const int& power);
+    friend Rational pow(const Rational& base, int exp);
     friend std::ostream& operator<< (std::ostream& os, const Rational& r);
     friend QTextStream& operator<< (QTextStream& qs, const Rational& r);
     friend std::istream& operator>> (std::istream& is, Rational& r);
