@@ -29,20 +29,17 @@ Interface::Interface(QWidget* parent)
     send_coef_btn->setGeometry(10, 25 + (names.size() * 28), 105, 20);
 
     x_name = std::make_unique<QLabel>("x = ", this);
-    x_num = std::make_unique<QLineEdit>(this);
+    x_num = std::make_unique<QLineEdit>("1", this);
     x_delimetr = std::make_unique<QLabel>("/", this);
-    x_denum = std::make_unique<QLineEdit>(this);
+    x_denum = std::make_unique<QLineEdit>("1", this);
 
     x_name->setGeometry(10, 35 + ((names.size() + 1) * 28), 30, 20);
     x_num->setGeometry(40, 35 + ((names.size() + 1) * 28), 30, 20);
     x_delimetr->setGeometry(75, 35 + ((names.size() + 1) * 28), 30, 20);
     x_denum->setGeometry(85, 35 + ((names.size() + 1) * 28), 30, 20);
-    x_num->setReadOnly(true);
-    x_denum->setReadOnly(true);
 
     send_x_btn = std::make_unique<QPushButton>("send x", this);
     send_x_btn->setGeometry(10, 40 + ((names.size() + 2) * 28), 105, 20);
-
 
     val_btn = std::make_unique<QPushButton>("value", this);
     root_btn = std::make_unique<QPushButton>("roots", this);
@@ -62,7 +59,9 @@ Interface::Interface(QWidget* parent)
                           "border-color: black;"
                           "}");
 
-    connect(val_btn.get(), SIGNAL(pressed()), this, SLOT(send_x_val()));
+    connect(send_x_btn.get(), SIGNAL(pressed()), this, SLOT(send_x_val()));
+    connect(send_coef_btn.get(), SIGNAL(pressed()), this, SLOT(send_coeffs()));
+    connect(val_btn.get(), SIGNAL(pressed()), this, SLOT(print_value()));
     connect(root_btn.get(), SIGNAL(pressed()), this, SLOT(print_roots()));
     connect(classic_btn.get(), SIGNAL(pressed()), this, SLOT(print_classic()));
     connect(cannonic_btn.get(), SIGNAL(pressed()), this, SLOT(print_cannonic()));
@@ -71,15 +70,55 @@ Interface::Interface(QWidget* parent)
 
 void Interface::send_x_val()
 {
-    x_num->setReadOnly(false);
-    x_denum->setReadOnly(false);
+    if (x_num->isReadOnly())
+    {
+        x_num->setReadOnly(false);
+        x_denum->setReadOnly(false);
+    }
+    else
+    {
+        x_num->setReadOnly(true);
+        x_denum->setReadOnly(true);
 
+        x = number(x_num->text().toInt(), x_denum->text().toInt());
+    }
+}
+
+
+void Interface::send_coeffs()
+{
+    if (nums[0]->isReadOnly())
+    {
+        for (std::size_t i = 0; i < nums.size(); ++i)
+        {
+            nums[i]->setReadOnly(false);
+            denums[i]->setReadOnly(false);
+        }
+    }
+    else
+    {
+        for (std::size_t i = 0; i < nums.size(); ++i)
+        {
+            nums[i]->setReadOnly(true);
+            denums[i]->setReadOnly(true);
+
+            coeffs[i] = number(
+                            nums[i]->text().toInt(),
+                            denums[i]->text().toInt());
+        }
+    }
 }
 
 
 void Interface::print_value() const
 {
+    number val = Polinom(
+                coeffs[0], coeffs[1], coeffs[2]).calculate_polinom(x);
 
+    QString str;
+    QTextStream ts(&str);
+    ts << val;
+    output->setText(str);
 }
 
 

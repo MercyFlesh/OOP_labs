@@ -38,6 +38,7 @@ public:
 
 public slots:
     void send_x_val();
+    void send_coeffs();
     void print_value() const;
     void print_roots() const;
     void print_classic() const;
@@ -45,4 +46,5 @@ public slots:
 
 private:
     std::array<number, count_coeffs> coeffs = {1, 1, 1};
+    number x = 1;
 };
