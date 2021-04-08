@@ -11,8 +11,8 @@ class Rational
 
 public:
     Rational() = default;
-    Rational(int a);
-    Rational(int a, int b);
+    explicit Rational(int a);
+    explicit Rational(int a, int b);
     Rational(const Rational& rt);
     Rational& operator= (const Rational& rhs);
 
