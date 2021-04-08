@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(client_test LANGUAGES CXX)
+project(lab4_client LANGUAGES CXX)
 
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -31,11 +31,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
     )
 else()
-    add_executable(client_test
+    add_executable(client
             ${PROJECT_SOURCES}
     )
 endif()
 
-target_link_libraries(client_test PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(client_test PRIVATE Qt${QT_VERSION_MAJOR}::Network)
+target_link_libraries(client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(client PRIVATE Qt${QT_VERSION_MAJOR}::Network)
 target_include_directories(${PROJECT_NAME} PUBLIC ../common)
