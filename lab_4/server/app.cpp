@@ -47,19 +47,19 @@ void App::rec(QByteArray requst)
     {
         number x(toRational(coeffs["x"].toObject()));
         number result = Polinom(a, b, c).calculate_polinom(x);
-        QJsonObject val{
-            {"num", result.get_numer()},
-            {"denum", result.get_denumer()}
-        };
+
+        QString str_val;
+        QTextStream ts(&str_val);
+        ts << result;
 
         jsonAns.insert("type", "value");
-        jsonAns.insert("val", val);
+        jsonAns.insert("val", str_val);
     }
     else if (jsonObj["type"].toString() == "roots")
     {
         jsonAns.insert("type", "roots");
 
-        QJsonObject root_1, root_2;
+        QString root_1, root_2;
         if (auto opt_roots = Polinom(a, b, c).get_roots();
                 opt_roots.has_value())
         {
@@ -67,14 +67,14 @@ void App::rec(QByteArray requst)
 
             if (opt_root_1.has_value())
             {
-                root_1.insert("num", opt_root_1->get_numer());
-                root_1.insert("denum", opt_root_1->get_denumer());
+                QTextStream ts(&root_1);
+                ts << *opt_root_1;
             }
 
             if (opt_root_2.has_value())
             {
-                root_2.insert("num", opt_root_2->get_numer());
-                root_2.insert("denum", opt_root_2->get_denumer());
+                QTextStream ts(&root_2);
+                ts << *opt_root_2;
             }
         }
 
