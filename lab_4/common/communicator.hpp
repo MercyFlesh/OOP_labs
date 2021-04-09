@@ -9,8 +9,6 @@ class Communicator : public QUdpSocket
 
     QHostAddress senderHost;
     quint16 senderPort;
-    QHostAddress receiverHost;
-    quint16 receiverPort;
 
 public:
     explicit Communicator(QHostAddress rec_host, quint16 rec_port,
