@@ -11,7 +11,8 @@
 
 App::App(int argc, char *argv[])
     : QCoreApplication(argc, argv),
-      com_ptr(new Communicator(QHostAddress::LocalHost, 5000))
+      com_ptr(new Communicator(QHostAddress::LocalHost, 5000,
+                               QHostAddress::LocalHost, 5001))
 {
     connect(com_ptr.get(), SIGNAL(rec(QByteArray)),
                       this, SLOT(rec(QByteArray)));
@@ -42,7 +43,6 @@ void App::rec(QByteArray requst)
     number a(toRational(coeffs["a"].toObject()));
     number b(toRational(coeffs["b"].toObject()));
     number c(toRational(coeffs["c"].toObject()));
-
 
     if (jsonObj["type"].toString() == "value")
     {

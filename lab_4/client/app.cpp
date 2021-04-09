@@ -2,7 +2,8 @@
 
 App::App(int argc, char* argv[])
     : QApplication(argc, argv),
-      com_ptr(new Communicator(QHostAddress::LocalHost, 5000)),
+      com_ptr(new Communicator(QHostAddress::LocalHost, 5001,
+                               QHostAddress::LocalHost, 5000)),
       interface_ptr(new Interface)
 {
     interface_ptr->show();
@@ -14,6 +15,7 @@ App::App(int argc, char* argv[])
 
 void App::accept(QByteArray msg_ans)
 {
+    qDebug() << 6;
     QJsonParseError json_error;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(msg_ans, &json_error);
     if (json_error.error!= QJsonParseError::NoError)

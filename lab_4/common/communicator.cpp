@@ -1,11 +1,12 @@
 #include "communicator.hpp"
 
-Communicator::Communicator(QHostAddress host,
-                           quint16 port,
+
+Communicator::Communicator(QHostAddress rec_host, quint16 rec_port,
+                           QHostAddress send_host, quint16 send_port,
                            QObject* parent)
-    : QUdpSocket(parent), host_(host), port_(port)
+    : QUdpSocket(parent), senderHost(send_host), senderPort(send_port)
 {
-      if(bind(host, port))
+      if(bind(rec_host, rec_port))
           connect(this, SIGNAL(readyRead()), this, SLOT(readyRead()));
 }
 
@@ -16,14 +17,14 @@ void Communicator::readyRead()
     {
         QByteArray buf;
         buf.resize(pendingDatagramSize());
-        readDatagram(buf.data(), buf.size());
+        readDatagram(buf.data(), buf.size(), &senderHost, &senderPort);
 
-        rec(buf);
+        emit rec(buf);
     }
 }
 
 
 void Communicator::send_msg(QByteArray msg)
 {
-    writeDatagram(msg, host_, port_);
+    writeDatagram(msg, senderHost, senderPort);
 }

@@ -7,12 +7,14 @@ class Communicator : public QUdpSocket
 {
     Q_OBJECT
 
-    QHostAddress host_;
-    quint16 port_;
+    QHostAddress senderHost;
+    quint16 senderPort;
+    QHostAddress receiverHost;
+    quint16 receiverPort;
 
 public:
-    explicit Communicator(QHostAddress host,
-                          quint16 port,
+    explicit Communicator(QHostAddress rec_host, quint16 rec_port,
+                          QHostAddress send_host, quint16 send_port,
                           QObject* parent = nullptr);
 
 signals:

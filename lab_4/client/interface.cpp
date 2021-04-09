@@ -2,10 +2,11 @@
 
 #include <string>
 
+
 Interface::Interface(QWidget* parent)
     : QWidget(parent)
 {
-    setWindowTitle("work #3");
+    setWindowTitle("work #4");
     setFixedSize(400, 300);
 
     for (std::size_t i = 0; i < names.size(); ++i)
@@ -132,8 +133,8 @@ void Interface::RequestForm()
     QPushButton* btn_ptr = reinterpret_cast<QPushButton*>(sender());
     if (btn_ptr == val_btn.get())
     {
-        json_request.insert("type", "value");
         json_coeffs.insert("x", rationalToJson(x));
+        json_request.insert("type", "value");
         json_request.insert("coeffs", json_coeffs);
     }
     else if (btn_ptr == root_btn.get())
@@ -152,7 +153,7 @@ void Interface::RequestForm()
         json_request.insert("coeffs", json_coeffs);
     }
 
-    request(json_request);
+    emit request(json_request);
 }
 
 
