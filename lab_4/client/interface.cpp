@@ -182,7 +182,7 @@ void Interface::ans(QJsonObject json_ans) const
         output->setText(str_output);
     }
     else if (json_ans["type"].toString() == "classic" ||
-             json_ans["type"].toString() == "cannonic")
+             json_ans["type"].toString() == "canonic")
     {
         output->setText(json_ans["polynom"].toString());
     }
