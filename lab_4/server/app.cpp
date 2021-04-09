@@ -13,8 +13,8 @@ App::App(int argc, char *argv[])
     : QCoreApplication(argc, argv),
       com_ptr(new Communicator(QHostAddress::LocalHost, 5000))
 {
-    connect(com_ptr.get(), SIGNAL(rec(QByteArray msg)),
-                      this, SLOT(rec(QByteArray msg)));
+    connect(com_ptr.get(), SIGNAL(rec(QByteArray)),
+                      this, SLOT(rec(QByteArray)));
 }
 
 
@@ -35,13 +35,14 @@ void App::rec(QByteArray requst)
     }
 
     QJsonObject jsonObj = jsonDoc_req.object();
-    QJsonObject coeffs = jsonObj["coeefs"].toObject();
+    QJsonObject coeffs = jsonObj["coeffs"].toObject();
 
     QJsonObject jsonAns;
 
     number a(toRational(coeffs["a"].toObject()));
     number b(toRational(coeffs["b"].toObject()));
     number c(toRational(coeffs["c"].toObject()));
+
 
     if (jsonObj["type"].toString() == "value")
     {
@@ -104,7 +105,7 @@ void App::rec(QByteArray requst)
     }
 
     QJsonDocument jsonDoc_ans;
-    jsonDoc_ans.setObject(jsonObj);
+    jsonDoc_ans.setObject(jsonAns);
     QByteArray dataArray = jsonDoc_ans.toJson();
 
     com_ptr->send_msg(dataArray);
