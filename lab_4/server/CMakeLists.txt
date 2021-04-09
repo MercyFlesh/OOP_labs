@@ -30,15 +30,14 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(server_test
+    qt_add_executable(server
         ${PROJECT_SOURCES}
     )
 else()
-    add_executable(server_test
+    add_executable(server
             ${PROJECT_SOURCES}
     )
 endif()
 
 target_link_libraries(server PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(server PRIVATE Qt${QT_VERSION_MAJOR}::Network)
-target_include_directories(${PROJECT_NAME} PUBLIC ../common)

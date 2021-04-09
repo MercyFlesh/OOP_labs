@@ -5,7 +5,7 @@
 #include <QCoreApplication>
 #include <memory>
 
-#include "communicator.hpp"
+#include "../common/communicator.hpp"
 #include "number.hpp"
 
 class App : public QCoreApplication

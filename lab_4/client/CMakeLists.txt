@@ -27,7 +27,7 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(client_test
+    qt_add_executable(client
         ${PROJECT_SOURCES}
     )
 else()
@@ -38,4 +38,3 @@ endif()
 
 target_link_libraries(client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(client PRIVATE Qt${QT_VERSION_MAJOR}::Network)
-target_include_directories(${PROJECT_NAME} PUBLIC ../common)
