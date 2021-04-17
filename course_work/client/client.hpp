@@ -10,7 +10,8 @@ class Client : public QObject
     Q_OBJECT
 
 public:
-    explicit Client(QObject* parent = nullptr);
+    explicit Client(QHostAddress host, qint16 port,
+                    QObject* parent = nullptr);
     ~Client() = default;
 
 signals:

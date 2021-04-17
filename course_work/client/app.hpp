@@ -1,11 +1,26 @@
-#ifndef APP_HPP
-#define APP_HPP
+#pragma once
+
+#include <QObject>
+#include <QApplication>
+#include <QJsonObject>
+#include <QScopedPointer>
+
+#include "interface.hpp"
+#include "client.hpp"
 
 
-class App
+class App : public QApplication
 {
-public:
-    App();
-};
+    Q_OBJECT
 
-#endif // APP_HPP
+    QScopedPointer<Interface> interface_ptr;
+    QScopedPointer<Client> client_ptr;
+
+public:
+    explicit App(int argc, char* argv[]);
+    ~App() = default;
+
+public slots:
+    //void send(QJsonObject json_msg);
+    //void accept();
+};
