@@ -6,7 +6,6 @@ Interface::Interface(QWidget* parent)
       params_window_ptr(new ParamsWindow)
 {
     setWindowTitle("Course work");
-    //setFixedSize(400, 300);
     setBaseSize(400, 30);
 
     tab_widgets_ptr->setFixedSize(3840, 2160);

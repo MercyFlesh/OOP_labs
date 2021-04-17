@@ -22,5 +22,5 @@ public slots:
     void readyRead();
 
 private:
-    QScopedPointer<QTcpSocket> socket_ptr;
+    std::unique_ptr<QTcpSocket> socket_ptr;
 };

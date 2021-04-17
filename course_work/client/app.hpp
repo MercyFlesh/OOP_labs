@@ -13,8 +13,8 @@ class App : public QApplication
 {
     Q_OBJECT
 
-    QScopedPointer<Interface> interface_ptr;
-    QScopedPointer<Client> client_ptr;
+    std::unique_ptr<Interface> interface_ptr;
+    std::unique_ptr<Client> client_ptr;
 
 public:
     explicit App(int argc, char* argv[]);
