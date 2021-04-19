@@ -13,11 +13,10 @@
 #include "paramswindow.hpp"
 
 
-class Interface : public QMainWindow
+class Interface : public QTabWidget
 {
     Q_OBJECT
 
-    QScopedPointer<QTabWidget> tab_widgets_ptr;
     QScopedPointer<ParamsWindow> params_window_ptr;
     QScopedPointer<StateWindow> state_window_ptr;
     QScopedPointer<ControlWindow> control_window_ptr;

@@ -2,8 +2,8 @@
 
 #include <QObject>
 #include <QWidget>
-//#include <QScopedPointer>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QGridLayout>
 #include <QPushButton>
 #include <QLabel>
@@ -23,7 +23,7 @@ class ControlWindow : public QWidget
 
     std::unique_ptr<QGridLayout> grid_form_ptr;
     std::unique_ptr<QHBoxLayout> hbox_ptr;
-
+    std::unique_ptr<QVBoxLayout> vbox_ptr;
 public:
     explicit ControlWindow(QWidget* parent = nullptr);
     ~ControlWindow() = default;
