@@ -1,15 +1,12 @@
 #pragma once
-
 #include <QObject>
 #include <QWidget>
 #include <QLabel>
 #include <QListWidget>
 #include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QGridLayout>
 
 #include <memory>
-
 
 class StateWindow : public QWidget
 {
@@ -20,11 +17,8 @@ class StateWindow : public QWidget
     std::unique_ptr<QListWidget> queue_requests_list;
     std::unique_ptr<QPushButton> update_free_btn, update_busy_btn, update_queue_btn;
 
-    std::unique_ptr<QVBoxLayout> vbox_free, vbox_busy, vbox_queue_list;
-    std::unique_ptr<QHBoxLayout> hbox_managers_lists;
-    std::unique_ptr<QVBoxLayout> vbox_main_layout;
+    std::unique_ptr<QGridLayout> grid_layout;
 
 public:
     explicit StateWindow(QWidget* parent = nullptr);
-    ~StateWindow() = default;
 };
