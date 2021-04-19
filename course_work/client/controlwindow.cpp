@@ -97,6 +97,7 @@ void ControlWindow::send_request()
 {
     QJsonObject json_request;
 
+    json_request.insert("type", "control_add");
     json_request.insert("name", name_edit_ptr->text());
     json_request.insert("email", email_edit_ptr->text());
     json_request.insert("description", descript_edit_ptr->toPlainText());
