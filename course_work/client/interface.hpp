@@ -4,9 +4,6 @@
 #include <QTabWidget>
 #include <QScopedPointer>
 #include <QPushButton>
-#include <QMainWindow>
-#include <QDialog>
-#include <QSizePolicy>
 
 #include "controlwindow.hpp"
 #include "statewindow.hpp"
@@ -26,4 +23,6 @@ public:
     ~Interface() = default;
 
 public slots:
+
+
 };

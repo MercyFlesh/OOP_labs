@@ -5,12 +5,10 @@
 
 ControlWindow::ControlWindow(QWidget* parent)
     : QWidget(parent),
-      hbox_ptr(new QHBoxLayout),
-      vbox_ptr(new QVBoxLayout),
-      grid_form_ptr(new QGridLayout(this))
+      grid_layout_ptr(new QGridLayout(this))
 {
-    grid_form_ptr->setVerticalSpacing(15);
-    grid_form_ptr->setHorizontalSpacing(10);
+    grid_layout_ptr->setVerticalSpacing(15);
+    grid_layout_ptr->setHorizontalSpacing(10);
 
     title_label_ptr = std::make_unique<QLabel>("Request", this);
     title_label_ptr->setStyleSheet("QLabel {font: 16pt;}");
@@ -31,18 +29,17 @@ ControlWindow::ControlWindow(QWidget* parent)
     email_label_ptr->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     descript_label_ptr->setAlignment(Qt::AlignRight | Qt::AlignTop);
 
-    grid_form_ptr->addWidget(title_label_ptr.get(), 0, 0, 1, 1);
-    grid_form_ptr->addWidget(request_number_ptr.get(), 1, 1, 1, 2);
-    grid_form_ptr->addWidget(name_label_ptr.get(), 2, 0, 1, 1);
-    grid_form_ptr->addWidget(name_edit_ptr.get(), 2, 1, 1, 2);
-    grid_form_ptr->addWidget(email_label_ptr.get(), 3, 0, 1, 1);
-    grid_form_ptr->addWidget(email_edit_ptr.get(), 3, 1, 1, 2);
-    grid_form_ptr->addWidget(descript_label_ptr.get(), 4, 0, 1, 1);
-    grid_form_ptr->addWidget(descript_edit_ptr.get(), 4, 1, 1, 2);
-    grid_form_ptr->addWidget(send_btn_ptr.get(), 5, 2, 1, 1);
+    grid_layout_ptr->addWidget(title_label_ptr.get(), 0, 0, 1, 1);
+    grid_layout_ptr->addWidget(request_number_ptr.get(), 1, 1, 1, 2);
+    grid_layout_ptr->addWidget(name_label_ptr.get(), 2, 0, 1, 1);
+    grid_layout_ptr->addWidget(name_edit_ptr.get(), 2, 1, 1, 2);
+    grid_layout_ptr->addWidget(email_label_ptr.get(), 3, 0, 1, 1);
+    grid_layout_ptr->addWidget(email_edit_ptr.get(), 3, 1, 1, 2);
+    grid_layout_ptr->addWidget(descript_label_ptr.get(), 4, 0, 1, 1);
+    grid_layout_ptr->addWidget(descript_edit_ptr.get(), 4, 1, 1, 2);
+    grid_layout_ptr->addWidget(send_btn_ptr.get(), 5, 2, 1, 1);
 
-    vbox_ptr->addLayout(grid_form_ptr.get());
-    setLayout(vbox_ptr.get());
+    setLayout(grid_layout_ptr.get());
 
     connect(send_btn_ptr.get(), SIGNAL(pressed()), this, SLOT(validate_form()));
     connect(this, SIGNAL(isValid()), this, SLOT(send_request()));

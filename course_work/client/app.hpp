@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QApplication>
 #include <QJsonObject>
+#include <QJsonDocument>
 #include <QScopedPointer>
 
 #include "interface.hpp"
@@ -21,6 +22,6 @@ public:
     ~App() = default;
 
 public slots:
-    //void send(QJsonObject json_msg);
+    void send(QJsonObject json_msg);
     //void accept();
 };

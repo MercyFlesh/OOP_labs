@@ -29,3 +29,13 @@ void Client::readyRead()
 {
 
 }
+
+
+void Client::send_data(QByteArray data)
+{
+    if(socket_ptr->state() == QAbstractSocket::ConnectedState)
+    {
+            socket_ptr->write(data);
+            socket_ptr->waitForBytesWritten(500);
+    }
+}

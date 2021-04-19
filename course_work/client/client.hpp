@@ -20,6 +20,7 @@ public slots:
     void conn();
     void disc();
     void readyRead();
+    void send_data(QByteArray data);
 
 private:
     std::unique_ptr<QTcpSocket> socket_ptr;
