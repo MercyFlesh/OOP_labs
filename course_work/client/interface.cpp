@@ -11,6 +11,21 @@ Interface::Interface(QWidget* parent)
     addTab(state_window_ptr.get(), "State");
     addTab(params_window_ptr.get(), "Params");
     addTab(control_window_ptr.get(), "Control");
+}
 
-    //connect(tab_widgets_ptr.get(), SIGNAL(currentChanged()), this, SLOT(showTabPageIndex()));
+
+void Interface::update_tabs(QJsonObject response)
+{
+    if (response["tab_type"].toString() == "state")
+    {
+        state_window_ptr->update_state(response);
+    }
+    else if (response["tab_type"].toString() == "params")
+    {
+        //params_window_ptr->update_params(response);
+    }
+    else if (response["tab_type"].toString() == "control")
+    {
+        control_window_ptr->update_control(response);
+    }
 }

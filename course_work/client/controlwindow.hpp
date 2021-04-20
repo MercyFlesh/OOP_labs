@@ -29,13 +29,13 @@ public:
     explicit ControlWindow(QWidget* parent = nullptr);
     ~ControlWindow() = default;
 
+    void update_control(QJsonObject response);
+
 private slots:
     void validate_form();
     void send_request();
-    void print_request_number(QJsonObject response);
 
 signals:
     void isValid();
     void send_control_req(QJsonObject request);
-    void control_response(QJsonObject response);
 };

@@ -4,6 +4,7 @@
 #include <QTcpSocket>
 #include <QHostAddress>
 #include <QScopedPointer>
+#include <QByteArray>
 
 class Client : public QObject
 {
@@ -14,13 +15,14 @@ public:
                     QObject* parent = nullptr);
     ~Client() = default;
 
-signals:
-
 public slots:
     void conn();
     void disc();
     void readyRead();
     void send_data(QByteArray data);
+
+signals:
+    void accept_response(QByteArray);
 
 private:
     std::unique_ptr<QTcpSocket> socket_ptr;

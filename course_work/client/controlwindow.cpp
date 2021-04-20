@@ -3,6 +3,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
+
 ControlWindow::ControlWindow(QWidget* parent)
     : QWidget(parent),
       grid_layout_ptr(new QGridLayout(this))
@@ -43,7 +44,6 @@ ControlWindow::ControlWindow(QWidget* parent)
 
     connect(send_btn_ptr.get(), SIGNAL(pressed()), this, SLOT(validate_form()));
     connect(this, SIGNAL(isValid()), this, SLOT(send_request()));
-    connect(this, SIGNAL(control_response(QJsonObject)), this, SLOT(print_request_number(QJsonObject)));
 }
 
 
@@ -103,7 +103,7 @@ void ControlWindow::send_request()
 }
 
 
-void ControlWindow::print_request_number(QJsonObject response)
+void ControlWindow::update_control(QJsonObject response)
 {
     request_number_ptr->setText("#" + response.value("number").toString());
     request_number_ptr->setStyleSheet("QLineEdit {border: 1px solid #1AD39A}");

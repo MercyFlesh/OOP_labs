@@ -35,7 +35,6 @@ StateWindow::StateWindow(QWidget* parent)
     connect(update_free_btn.get(), SIGNAL(pressed()), this, SLOT(send_request()));
     connect(update_busy_btn.get(), SIGNAL(pressed()), this, SLOT(send_request()));
     connect(update_queue_btn.get(), SIGNAL(pressed()), this, SLOT(send_request()));
-    connect(this, SIGNAL(state_print_list(QJsonObject)), this, SLOT(print_list(QJsonObject)));
 }
 
 
@@ -62,7 +61,7 @@ void StateWindow::send_request()
 }
 
 
-void StateWindow::print_list(QJsonObject response)
+void StateWindow::update_state(QJsonObject response)
 {
     QJsonArray json_list = response["reponse_list"].toArray();
 

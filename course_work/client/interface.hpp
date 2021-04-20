@@ -22,7 +22,5 @@ public:
     explicit Interface(QWidget* parent = nullptr);
     ~Interface() = default;
 
-public slots:
-
-
+    void update_tabs(QJsonObject response);
 };

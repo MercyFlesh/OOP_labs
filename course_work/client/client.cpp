@@ -15,19 +15,23 @@ Client::Client(QHostAddress host, qint16 port,
 
 void Client::conn()
 {
-    qDebug() << "client connected";
+    qDebug() << "connected to server";
 }
 
 
 void Client::disc()
 {
-    qDebug() << "client disconnected";
+    qDebug() << "disconnected from server";
 }
 
 
 void Client::readyRead()
 {
-
+    if(socket_ptr->waitForConnected(500))
+    {
+        QByteArray data = socket_ptr->readAll();
+        emit accept_response(data);
+    }
 }
 
 

@@ -4,7 +4,9 @@
 #include <QApplication>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QJsonParseError>
 #include <QScopedPointer>
+#include <QByteArray>
 
 #include "interface.hpp"
 #include "client.hpp"
@@ -23,5 +25,5 @@ public:
 
 public slots:
     void send(QJsonObject json_msg);
-    //void accept();
+    void accept(QByteArray response);
 };

@@ -25,11 +25,11 @@ public:
     explicit StateWindow(QWidget* parent = nullptr);
     ~StateWindow() = default;
 
+    void update_state(QJsonObject response);
+
 public slots:
     void send_request();
-    void print_list(QJsonObject response);
 
 signals:
     void send_state_req(QJsonObject);
-    void state_print_list(QJsonObject);
 };
