@@ -5,6 +5,8 @@
 #include <QListWidget>
 #include <QPushButton>
 #include <QGridLayout>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #include <memory>
 
@@ -21,4 +23,13 @@ class StateWindow : public QWidget
 
 public:
     explicit StateWindow(QWidget* parent = nullptr);
+    ~StateWindow() = default;
+
+public slots:
+    void send_request();
+    void print_list(QJsonObject response);
+
+signals:
+    void send_state_req(QJsonObject);
+    void state_print_list(QJsonObject);
 };

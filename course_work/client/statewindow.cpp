@@ -31,4 +31,66 @@ StateWindow::StateWindow(QWidget* parent)
     grid_layout->addWidget(update_queue_btn.get(), 5, 0, 1, 1);
 
     setLayout(grid_layout.get());
+
+    connect(update_free_btn.get(), SIGNAL(pressed()), this, SLOT(send_request()));
+    connect(update_busy_btn.get(), SIGNAL(pressed()), this, SLOT(send_request()));
+    connect(update_queue_btn.get(), SIGNAL(pressed()), this, SLOT(send_request()));
+    connect(this, SIGNAL(state_print_list(QJsonObject)), this, SLOT(print_list(QJsonObject)));
+}
+
+
+void StateWindow::send_request()
+{
+    QJsonObject state_request;
+    state_request.insert("type", "state");
+
+    QPushButton* btn_ptr = reinterpret_cast<QPushButton*>(sender());
+    if (btn_ptr == update_free_btn.get())
+    {
+        state_request.insert("field", "free");
+    }
+    else if (btn_ptr == update_busy_btn.get())
+    {
+        state_request.insert("field", "busy");
+    }
+    else if (btn_ptr == update_queue_btn.get())
+    {
+        state_request.insert("field", "queue_requests");
+    }
+
+    emit send_state_req(state_request);
+}
+
+
+void StateWindow::print_list(QJsonObject response)
+{
+    QJsonArray json_list = response["reponse_list"].toArray();
+
+    if (response["field"] == "free")
+    {
+        for (const QJsonValue& jsonVal : json_list)
+        {
+            QJsonObject json_manager = jsonVal.toObject();
+            free_managers_list->addItem(json_manager["id"].toString() + "\t" +
+                                        json_manager["name"].toString());
+        }
+    }
+    else if (response["field"] == "busy")
+    {
+        for (const QJsonValue& jsonVal : json_list)
+        {
+            QJsonObject json_manager = jsonVal.toObject();
+            free_managers_list->addItem(json_manager["id"].toString() + "\t" +
+                                        json_manager["name"].toString() + "\t" +
+                                        json_manager["request_id"].toString());
+        }
+    }
+    else if (response["field"] == "queue_requests")
+    {
+        for (const QJsonValue& jsonVal : json_list)
+        {
+            QJsonObject json_request = jsonVal.toObject();
+            free_managers_list->addItem(json_request["id"].toString());
+        }
+    }
 }
