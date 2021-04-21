@@ -33,5 +33,9 @@ public:
     explicit ParamsWindow(QWidget* parent = nullptr);
     ~ParamsWindow() = default;
 
+public slots:
+    void send_params();
 
+signals:
+    void send_params_req(QJsonObject);
 };

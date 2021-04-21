@@ -10,6 +10,7 @@ App::App(int argc, char* argv[])
 
     connect(this, SIGNAL(send_control_req(QJsonObject)), this, SLOT(send(QJsonObject)));
     connect(this, SIGNAL(send_state_req(QJsonObject)), this, SLOT(send(QJsonObject)));
+    connect(this, SIGNAL(send_params_req(QJsonObject)), this, SLOT(send(QJsonObject)));
     connect(this, SIGNAL(accept_response(QByteArray)), this, SLOT(accept(QByteArray)));
 }
 

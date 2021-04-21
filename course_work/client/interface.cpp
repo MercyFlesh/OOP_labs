@@ -22,10 +22,6 @@ void Interface::update_tabs(QJsonObject response)
     {
         state_window_ptr->update_state(response);
     }
-    else if (response["tab_type"].toString() == "params")
-    {
-        //params_window_ptr->update_params(response);
-    }
     else if (response["tab_type"].toString() == "control")
     {
         control_window_ptr->update_control(response);

@@ -47,4 +47,28 @@ ParamsWindow::ParamsWindow(QWidget* parent)
     vbox_layout->addLayout(update_form_layout.get());
 
     setLayout(vbox_layout.get());
+
+    connect(add_manager_btn.get(), SIGNAL(pressed()), this, SLOT(send_params()));
+}
+
+
+void ParamsWindow::send_params()
+{
+    QJsonObject json_request{{"type", "params"}};
+
+    QPushButton* btn_ptr = reinterpret_cast<QPushButton*>(sender());
+    if (btn_ptr == add_manager_btn.get())
+    {
+        json_request.insert("action", "add_manager");
+        json_request.insert("name", add_manager_name_edit->text());
+        json_request.insert("rating", add_manager_rating_edit->text());
+    }
+    else if (btn_ptr == update_manager_btn.get())
+    {
+        json_request.insert("action", "update_rating");
+        json_request.insert("id", id_update_manager_edit->text());
+        json_request.insert("rating", update_rating->text());
+    }
+
+    emit send_params_req(json_request);
 }
