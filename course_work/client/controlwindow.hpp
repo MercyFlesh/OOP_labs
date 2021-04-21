@@ -2,6 +2,9 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QFormLayout>
 #include <QGridLayout>
 #include <QPushButton>
 #include <QLabel>
@@ -15,16 +18,15 @@ class ControlWindow : public QWidget
 {
     Q_OBJECT
 
-    std::unique_ptr<QLabel> add_title_label, del_title_label, name_label;
-    std::unique_ptr<QLabel> email_label_ptr, descript_label;
-    std::unique_ptr<QLabel> id_add_request_label, id_del_request_label;
-    std::unique_ptr<QLineEdit> add_request_number_edit, del_request_number_edit;
+    std::unique_ptr<QLabel> add_title_label, del_title_label;
+    std::unique_ptr<QLineEdit> add_request_id_edit, del_request_id_edit;
     std::unique_ptr<QLineEdit> name_edit, email_edit;
     std::unique_ptr<QTextEdit> descript_edit;
 
     std::unique_ptr<QPushButton> add_send_btn, del_send_btn;
 
-    std::unique_ptr<QGridLayout> grid_layout;
+    std::unique_ptr<QVBoxLayout> vbox_layout;
+    std::unique_ptr<QFormLayout> add_form_layout, del_from_layout;
 
 public:
     explicit ControlWindow(QWidget* parent = nullptr);

@@ -6,56 +6,57 @@
 
 ControlWindow::ControlWindow(QWidget* parent)
     : QWidget(parent),
-      grid_layout(new QGridLayout(this))
+      vbox_layout(new QVBoxLayout(this)),
+      add_form_layout(new QFormLayout),
+      del_from_layout(new QFormLayout)
 {
-    grid_layout->setVerticalSpacing(15);
-    grid_layout->setHorizontalSpacing(10);
-
     add_title_label = std::make_unique<QLabel>("Add request", this);
     add_title_label->setStyleSheet("QLabel {font: 14pt;}");
 
-    id_add_request_label = std::make_unique<QLabel>("id", this);
-    add_request_number_edit = std::make_unique<QLineEdit>(this);
-    add_request_number_edit->setReadOnly(true);
+    add_request_id_edit = std::make_unique<QLineEdit>(this);
+    add_request_id_edit->setReadOnly(true);
 
-    name_label = std::make_unique<QLabel>("Name", this);
-    email_label_ptr = std::make_unique<QLabel>("Email", this);
-    descript_label = std::make_unique<QLabel>("Description", this);
     name_edit = std::make_unique<QLineEdit>(this);
     email_edit = std::make_unique<QLineEdit>(this);
     descript_edit = std::make_unique<QTextEdit>(this);
-
     add_send_btn = std::make_unique<QPushButton>("add", this);
 
     del_title_label = std::make_unique<QLabel>("Delete request", this);
     del_title_label->setStyleSheet("QLabel {font: 14pt;}");
-    id_del_request_label = std::make_unique<QLabel>("id", this);
-    del_request_number_edit = std::make_unique<QLineEdit>(this);
+    del_request_id_edit = std::make_unique<QLineEdit>(this);
     del_send_btn = std::make_unique<QPushButton>("delete", this);
 
-    name_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    email_label_ptr->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    descript_label->setAlignment(Qt::AlignRight | Qt::AlignTop);
-    id_del_request_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    id_add_request_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    add_request_id_edit->setMaximumWidth(200);
+    name_edit->setMaximumWidth(200);
+    email_edit->setMaximumWidth(200);
+    descript_edit->setMaximumSize(200, 150);
+    add_send_btn->setMaximumWidth(60);
 
-    grid_layout->addWidget(add_title_label.get(), 0, 1, 1, 4);
-    grid_layout->addWidget(name_label.get(), 1, 0, 1, 1);
-    grid_layout->addWidget(name_edit.get(), 1, 1, 1, 2);
-    grid_layout->addWidget(email_label_ptr.get(), 2, 0, 1, 1);
-    grid_layout->addWidget(email_edit.get(), 2, 1, 1, 2);
-    grid_layout->addWidget(descript_label.get(), 3, 0, 1, 1);
-    grid_layout->addWidget(descript_edit.get(), 3, 1, 1, 2);
-    grid_layout->addWidget(id_add_request_label.get(), 4, 0, 1, 1);
-    grid_layout->addWidget(add_request_number_edit.get(), 4, 1, 1, 2);
-    grid_layout->addWidget(add_send_btn.get(), 5, 2, 1, 1);
+    del_request_id_edit->setMaximumWidth(200);
+    del_send_btn->setMaximumWidth(60);
 
-    grid_layout->addWidget(del_title_label.get(), 6, 1, 1, 1);
-    grid_layout->addWidget(id_del_request_label.get(), 7, 0, 1, 1);
-    grid_layout->addWidget(del_request_number_edit.get(), 7, 1, 1, 1);
-    grid_layout->addWidget(del_send_btn.get(), 7, 2, 1, 1);
+    add_form_layout->setLabelAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    del_from_layout->setLabelAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-    setLayout(grid_layout.get());
+    add_form_layout->addRow("name", name_edit.get());
+    add_form_layout->addRow("email", email_edit.get());
+    add_form_layout->addRow("descript", descript_edit.get());
+    add_form_layout->addRow("id", add_request_id_edit.get());
+    add_form_layout->addWidget(add_send_btn.get());
+
+    del_from_layout->addRow("id", del_request_id_edit.get());
+    del_from_layout->addWidget(del_send_btn.get());
+
+    vbox_layout->setSpacing(10);
+    vbox_layout->setSizeConstraint(QLayout::SetFixedSize);
+    vbox_layout->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    vbox_layout->addWidget(add_title_label.get());
+    vbox_layout->addLayout(add_form_layout.get());
+    vbox_layout->addWidget(del_title_label.get());
+    vbox_layout->addLayout(del_from_layout.get());
+
+
+    setLayout(vbox_layout.get());
 
     connect(add_send_btn.get(), SIGNAL(pressed()), this, SLOT(validate_form()));
     connect(del_send_btn.get(), SIGNAL(pressed()), this, SLOT(delete_request()));
@@ -121,19 +122,19 @@ void ControlWindow::send_request()
 
 void ControlWindow::delete_request()
 {
-    if (!del_request_number_edit->text().isEmpty())
+    if (!del_request_id_edit->text().isEmpty())
     {
-        del_request_number_edit->setStyleSheet("");
+        del_request_id_edit->setStyleSheet("");
 
         QJsonObject json_request;
         json_request.insert("type", "control_del");
-        json_request.insert("id_requst", del_request_number_edit->text());
+        json_request.insert("id_requst", del_request_id_edit->text());
 
         emit send_control_req(json_request);
     }
     else
     {
-        del_request_number_edit->setStyleSheet("QLineEdit {border: 1px solid #B9103C}");
+        del_request_id_edit->setStyleSheet("QLineEdit {border: 1px solid #B9103C}");
     }
 
 
@@ -142,8 +143,8 @@ void ControlWindow::delete_request()
 
 void ControlWindow::update_control(QJsonObject response)
 {
-    add_request_number_edit->setText(response.value("number").toString());
-    add_request_number_edit->setStyleSheet("QLineEdit {border: 1px solid #1AD39A}");
+    add_request_id_edit->setText(response.value("number").toString());
+    add_request_id_edit->setStyleSheet("QLineEdit {border: 1px solid #1AD39A}");
 
     name_edit->clear();
     email_edit->clear();

@@ -7,6 +7,8 @@ Interface::Interface(QWidget* parent)
       params_window_ptr(new ParamsWindow)
 {
     setWindowTitle("Course work");
+    setBaseSize(400, 600);
+    setMinimumSize(300, 400);
 
     addTab(state_window_ptr.get(), "State");
     addTab(params_window_ptr.get(), "Params");
