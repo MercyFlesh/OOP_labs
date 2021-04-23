@@ -3,11 +3,13 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPushButton>
+#include <QRadioButton>
 #include <QLineEdit>
 #include <QJsonObject>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QFormLayout>
+#include <QGridLayout>
 
 #include <memory>
 #include <array>
@@ -19,17 +21,21 @@ using HBoxLayout_ptr = std::unique_ptr<QHBoxLayout>;
 using VBoxLayout_ptr = std::unique_ptr<QVBoxLayout>;
 using FormLayout_ptr = std::unique_ptr<QFormLayout>;
 
+
 class Interface : public QWidget
 {
     Q_OBJECT
     static constexpr int count_coeffs = 3;
 
-    std::array<Label_ptr, count_coeffs> names, delimetrs;
+    std::array<Label_ptr, count_coeffs> delimetrs;
     std::array<LineEdit_ptr, count_coeffs> nums;
     std::array<LineEdit_ptr, count_coeffs> denums;
 
     LineEdit_ptr x_num, x_denum;
-    Label_ptr x_name, x_delimetr;
+    Label_ptr x_delimetr;
+
+    std::unique_ptr<QRadioButton> integer_radio_btn;
+    std::unique_ptr<QRadioButton> real_radio_btn;
 
     PushButton_ptr val_btn, root_btn;
     PushButton_ptr classic_btn, cannonic_btn;
@@ -38,6 +44,7 @@ class Interface : public QWidget
     Label_ptr output;
 
     VBoxLayout_ptr vbox_main_layout;
+    HBoxLayout_ptr hbox_radio_layout;
     FormLayout_ptr coeffs_form_layout;
     HBoxLayout_ptr hbox_layout;
     VBoxLayout_ptr vbox_btns_layout;
@@ -52,12 +59,12 @@ signals:
     void request(QJsonObject json_request);
 
 public slots:
-    //void ans(QJsonObject json_answer) const;
+    void ans(QJsonObject json_answer) const;
 
 private slots:
-    //void send_x_val();
-    //void send_coeffs();
-    //void RequestForm();
+    void send_x_val();
+    void send_coeffs();
+    void RequestForm();
 
 private:
     struct rational {
@@ -69,7 +76,7 @@ private:
         rational{1, 1}, rational{1, 1}, rational{1, 1}
     };
 
-    //QJsonObject rationalToJson(const rational& coeff) const;
+    QJsonObject rationalToJson(const rational& coeff) const;
 
     rational x{1, 1};
 };

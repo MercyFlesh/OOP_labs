@@ -23,7 +23,7 @@ void App::accept(QByteArray msg_ans)
         return;
     }
 
-    //interface_ptr->ans(jsonDoc.object());
+    interface_ptr->ans(jsonDoc.object());
 }
 
 void App::send(QJsonObject json_request)
