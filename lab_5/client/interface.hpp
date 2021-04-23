@@ -70,16 +70,5 @@ private slots:
 
 private:
     void ClearLayout(QLayout* layout);
-    struct rational {
-      int numerator;
-      int denumerator;
-    };
-
-    std::array<rational, count_coeffs> coeffs = {
-        rational{1, 1}, rational{1, 1}, rational{1, 1}
-    };
-
     QJsonObject rationalToJson(int number_coefficint) const;
-
-    rational x{1, 1};
 };
