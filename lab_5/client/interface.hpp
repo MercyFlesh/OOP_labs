@@ -25,7 +25,7 @@ using FormLayout_ptr = std::unique_ptr<QFormLayout>;
 class Interface : public QWidget
 {
     Q_OBJECT
-    static constexpr int count_coeffs = 3;
+    static constexpr int count_coeffs = 4;
 
     std::array<Label_ptr, count_coeffs> delimetrs;
     std::array<LineEdit_ptr, count_coeffs> nums;
@@ -49,7 +49,7 @@ class Interface : public QWidget
     HBoxLayout_ptr hbox_layout;
     VBoxLayout_ptr vbox_btns_layout;
 
-    std::array<HBoxLayout_ptr, 4> hbox_coeffs_layouts;
+    std::array<HBoxLayout_ptr, count_coeffs> hbox_coeffs_layouts;
 
 public:
     Interface(QWidget* parent = nullptr);
@@ -62,11 +62,14 @@ public slots:
     void ans(QJsonObject json_answer) const;
 
 private slots:
+    void print_inetger_values_form();
+    void print_real_values_form();
     void send_x_val();
     void send_coeffs();
     void RequestForm();
 
 private:
+    void ClearLayout(QLayout* layout);
     struct rational {
       int numerator;
       int denumerator;

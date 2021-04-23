@@ -16,47 +16,32 @@ Interface::Interface(QWidget* parent)
 
     integer_radio_btn = std::make_unique<QRadioButton>("int", this);
     real_radio_btn = std::make_unique<QRadioButton>("real", this);
+    integer_radio_btn->setChecked(true);
 
     hbox_radio_layout->setSpacing(15);
     hbox_radio_layout->addWidget(integer_radio_btn.get(), 0);
     hbox_radio_layout->addWidget(real_radio_btn.get(), 1, Qt::AlignLeft);
 
-    coeffs_form_layout->setSpacing(15);
     for (std::size_t i = 0; i < count_coeffs; ++i)
-    {
         hbox_coeffs_layouts[i] = std::make_unique<QHBoxLayout>();
 
-        nums[i] = std::make_unique<QLineEdit>("1", this);
-        delimetrs[i] = std::make_unique<QLabel>("/", this);
-        denums[i] = std::make_unique<QLineEdit>("1", this);
+    print_inetger_values_form();
 
-        hbox_coeffs_layouts[i]->addWidget(nums[i].get(), 0);
-        hbox_coeffs_layouts[i]->addWidget(delimetrs[i].get(), 0);
-        hbox_coeffs_layouts[i]->addWidget(denums[i].get(), 1, Qt::AlignLeft);
-
-        coeffs_form_layout->addRow(
-                    QString((std::string(1, 'a' + i) + " = ").c_str()),
-                    hbox_coeffs_layouts[i].get());
-
-    }
+    coeffs_form_layout->setSpacing(10);
+    coeffs_form_layout->addRow("a = ", hbox_coeffs_layouts[0].get());
+    coeffs_form_layout->addRow("b = ", hbox_coeffs_layouts[1].get());
+    coeffs_form_layout->addRow("c = ", hbox_coeffs_layouts[2].get());
 
     send_coef_btn = std::make_unique<QPushButton>("send coeffs", this);
-
-    x_num = std::make_unique<QLineEdit>("1", this);
-    x_delimetr = std::make_unique<QLabel>("/", this);
-    x_denum = std::make_unique<QLineEdit>("1", this);
-    send_x_btn = std::make_unique<QPushButton>("send x", this);
-
-    send_coef_btn->setMaximumWidth(150);
-    send_x_btn->setMaximumWidth(150);
-
-    hbox_coeffs_layouts[3] = std::make_unique<QHBoxLayout>();
-    hbox_coeffs_layouts[3]->addWidget(x_num.get(), 0);
-    hbox_coeffs_layouts[3]->addWidget(x_delimetr.get(), 0);
-    hbox_coeffs_layouts[3]->addWidget(x_denum.get(), 1, Qt::AlignLeft);
-
+    send_coef_btn->setMaximumWidth(75);
+    //send_coef_btn->setStyleSheet("QPushButton {margin-top: -10px;}");
     coeffs_form_layout->addWidget(send_coef_btn.get());
+
     coeffs_form_layout->addRow("x = ", hbox_coeffs_layouts[3].get());
+
+    send_x_btn = std::make_unique<QPushButton>("send x", this);
+    send_x_btn->setMaximumWidth(75);
+
     coeffs_form_layout->addWidget(send_x_btn.get());
 
     val_btn = std::make_unique<QPushButton>("value", this);
@@ -64,15 +49,15 @@ Interface::Interface(QWidget* parent)
     classic_btn = std::make_unique<QPushButton>("classic", this);
     cannonic_btn = std::make_unique<QPushButton>("cannonic", this);
 
-    vbox_btns_layout->setSpacing(1);
+    vbox_btns_layout->setSpacing(10);
     vbox_btns_layout->addWidget(val_btn.get());
     vbox_btns_layout->addWidget(root_btn.get());
     vbox_btns_layout->addWidget(classic_btn.get());
     vbox_btns_layout->addWidget(cannonic_btn.get());
 
-    hbox_layout->setSpacing(40);
+    hbox_layout->setSpacing(30);
     hbox_layout->addLayout(coeffs_form_layout.get());
-    hbox_layout->addLayout(vbox_btns_layout.get(), 0);
+    hbox_layout->addLayout(vbox_btns_layout.get());
 
     output = std::make_unique<QLabel>(this);
     output->setStyleSheet("QLabel {"
@@ -88,12 +73,60 @@ Interface::Interface(QWidget* parent)
     vbox_main_layout->addWidget(output.get());
     setLayout(vbox_main_layout.get());
 
+    connect(integer_radio_btn.get(), SIGNAL(clicked()), this, SLOT(print_inetger_values_form()));
+    connect(real_radio_btn.get(), SIGNAL(clicked()), this, SLOT(print_real_values_form()));
+
     connect(send_x_btn.get(), SIGNAL(pressed()), this, SLOT(send_x_val()));
     connect(send_coef_btn.get(), SIGNAL(pressed()), this, SLOT(send_coeffs()));
     connect(val_btn.get(), SIGNAL(pressed()), this, SLOT(RequestForm()));
     connect(root_btn.get(), SIGNAL(pressed()), this, SLOT(RequestForm()));
     connect(classic_btn.get(), SIGNAL(pressed()), this, SLOT(RequestForm()));
     connect(cannonic_btn.get(), SIGNAL(pressed()), this, SLOT(RequestForm()));
+}
+
+void Interface::ClearLayout(QLayout* layout)
+{
+    if (!layout)
+        return;
+
+    QLayoutItem* item;
+    while ((item = layout->takeAt(0)) != nullptr)
+    {
+        delete item->widget();
+        ClearLayout(item->layout());
+    }
+}
+
+void Interface::print_inetger_values_form()
+{
+    for (std::size_t i = 0; i < count_coeffs; ++i)
+    {
+        ClearLayout(hbox_coeffs_layouts[i].get());
+        nums[i].release();
+        delimetrs[i].release();
+        denums[i].release();
+
+        nums[i] = std::make_unique<QLineEdit>("1", this);
+        nums[i]->setMaximumWidth(75);
+        hbox_coeffs_layouts[i]->addWidget(nums[i].get());
+    }
+}
+
+void Interface::print_real_values_form()
+{
+    for (std::size_t i = 0; i < count_coeffs; ++i)
+    {
+        ClearLayout(hbox_coeffs_layouts[i].get());
+        nums[i].release();
+
+        nums[i] = std::make_unique<QLineEdit>("1", this);
+        delimetrs[i] = std::make_unique<QLabel>("/", this);
+        denums[i] = std::make_unique<QLineEdit>("1", this);
+
+        hbox_coeffs_layouts[i]->addWidget(nums[i].get(), 0, Qt::AlignLeft);
+        hbox_coeffs_layouts[i]->addWidget(delimetrs[i].get(), 0);
+        hbox_coeffs_layouts[i]->addWidget(denums[i].get(), 1, Qt::AlignLeft);
+    }
 }
 
 
@@ -108,17 +141,17 @@ QJsonObject Interface::rationalToJson(const rational& coeff) const
 
 void Interface::send_x_val()
 {
-    if (x_num->isReadOnly())
+    if (nums[3]->isReadOnly())
     {
-        x_num->setReadOnly(false);
-        x_denum->setReadOnly(false);
+        nums[3]->setReadOnly(false);
+        denums[3]->setReadOnly(false);
     }
     else
     {
-        x_num->setReadOnly(true);
-        x_denum->setReadOnly(true);
+        nums[3]->setReadOnly(true);
+        denums[3]->setReadOnly(true);
 
-        x = {x_num->text().toInt(), x_denum->text().toInt()};
+        x = {nums[3]->text().toInt(), denums[3]->text().toInt()};
     }
 }
 
