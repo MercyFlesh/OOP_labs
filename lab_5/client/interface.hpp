@@ -79,7 +79,7 @@ private:
         rational{1, 1}, rational{1, 1}, rational{1, 1}
     };
 
-    QJsonObject rationalToJson(const rational& coeff) const;
+    QJsonObject rationalToJson(int number_coefficint) const;
 
     rational x{1, 1};
 };

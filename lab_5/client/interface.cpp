@@ -130,40 +130,43 @@ void Interface::print_real_values_form()
 }
 
 
-QJsonObject Interface::rationalToJson(const rational& coeff) const
+QJsonObject Interface::rationalToJson(int number_coefficint) const
 {
     return QJsonObject{
-        {"num", coeff.numerator},
-        {"denum", coeff.denumerator}
+        {"num", nums[number_coefficint]->text().toInt()},
+        {"denum", denums[number_coefficint]->text().toInt()}
     };
 }
 
 
 void Interface::send_x_val()
 {
+    bool real_check = real_radio_btn->isChecked();
     if (nums[3]->isReadOnly())
     {
         nums[3]->setReadOnly(false);
-        denums[3]->setReadOnly(false);
+        if (real_check)
+            denums[3]->setReadOnly(false);
     }
     else
     {
         nums[3]->setReadOnly(true);
-        denums[3]->setReadOnly(true);
-
-        x = {nums[3]->text().toInt(), denums[3]->text().toInt()};
+        if (real_check)
+            denums[3]->setReadOnly(true);
     }
 }
 
 
 void Interface::send_coeffs()
 {
+    bool real_check = real_radio_btn->isChecked();
     if (nums[0]->isReadOnly())
     {
         for (std::size_t i = 0; i < nums.size(); ++i)
         {
             nums[i]->setReadOnly(false);
-            denums[i]->setReadOnly(false);
+            if (real_check)
+                denums[i]->setReadOnly(false);
         }
     }
     else
@@ -171,12 +174,8 @@ void Interface::send_coeffs()
         for (std::size_t i = 0; i < nums.size(); ++i)
         {
             nums[i]->setReadOnly(true);
-            denums[i]->setReadOnly(true);
-
-            coeffs[i] = {
-                nums[i]->text().toInt(),
-                denums[i]->text().toInt()
-            };
+            if (real_check)
+                denums[i]->setReadOnly(true);
         }
     }
 }
@@ -184,34 +183,50 @@ void Interface::send_coeffs()
 
 void Interface::RequestForm()
 {
-    QJsonObject json_request;
+    bool real_check = real_radio_btn->isChecked();
 
-    QJsonObject json_coeffs{
-        {"a", rationalToJson(coeffs[0])},
-        {"b", rationalToJson(coeffs[1])},
-        {"c", rationalToJson(coeffs[2])},
-    };
+    QJsonObject json_request;
+    QJsonObject json_coeffs;
+
+    if (real_check)
+    {
+        json_request.insert("number_type", "real");
+        json_coeffs.insert("a", rationalToJson(0));
+        json_coeffs.insert("b", rationalToJson(1));
+        json_coeffs.insert("c", rationalToJson(2));
+    }
+    else
+    {
+        json_request.insert("number_type", "int");
+        json_coeffs.insert("a", nums[0]->text().toInt());
+        json_coeffs.insert("b", nums[1]->text().toInt());
+        json_coeffs.insert("c", nums[2]->text().toInt());
+    }
 
     QPushButton* btn_ptr = reinterpret_cast<QPushButton*>(sender());
     if (btn_ptr == val_btn.get())
     {
-        json_coeffs.insert("x", rationalToJson(x));
-        json_request.insert("type", "value");
+        if (real_check)
+            json_coeffs.insert("x", rationalToJson(3));
+        else
+            json_coeffs.insert("x", nums[3]->text().toInt());
+
+        json_request.insert("print_type", "value");
         json_request.insert("coeffs", json_coeffs);
     }
     else if (btn_ptr == root_btn.get())
     {
-        json_request.insert("type", "roots");
+        json_request.insert("print_type", "roots");
         json_request.insert("coeffs", json_coeffs);
     }
     else if (btn_ptr == classic_btn.get())
     {
-        json_request.insert("type", "classic");
+        json_request.insert("print_type", "classic");
         json_request.insert("coeffs", json_coeffs);
     }
     else if (btn_ptr == cannonic_btn.get())
     {
-        json_request.insert("type", "canonic");
+        json_request.insert("print_type", "canonic");
         json_request.insert("coeffs", json_coeffs);
     }
 
