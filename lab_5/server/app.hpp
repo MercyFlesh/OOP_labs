@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "../common/communicator.hpp"
-#include "number.hpp"
+#include "rational.hpp"
 
 class App : public QCoreApplication
 {
@@ -18,7 +18,11 @@ public:
     App(int argc, char* argv[]);
 
 private:
-    number toRational(QJsonObject coeff);
+    Rational toRational(QJsonObject coeff);
+
+    template<typename number>
+    void make_response(QJsonObject json_request,
+                       number a, number b, number c, std::optional<number> x);
 
 public slots:
     void rec(QByteArray request);

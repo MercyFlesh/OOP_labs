@@ -1,5 +1,4 @@
 #include "app.hpp"
-#include "rational.hpp"
 #include "polinom.hpp"
 
 #include <QJsonObject>
@@ -19,35 +18,23 @@ App::App(int argc, char *argv[])
 }
 
 
-number App::toRational(QJsonObject coeff)
+
+Rational App::toRational(QJsonObject coeff)
 {
-    return number(coeff["num"].toInt(),
+    return Rational(coeff["num"].toInt(),
                   coeff["denum"].toInt());
 }
 
-void App::rec(QByteArray requst)
+
+template<typename number>
+void App::make_response(QJsonObject jsonObj,
+                        number a, number b, number c, std::optional<number> x)
 {
-    QJsonParseError json_error;
-    QJsonDocument jsonDoc_req = QJsonDocument::fromJson(requst, &json_error);
-    if (json_error.error!= QJsonParseError::NoError)
-    {
-        qDebug() << "json error";
-        return;
-    }
-
-    QJsonObject jsonObj = jsonDoc_req.object();
-    QJsonObject coeffs = jsonObj["coeffs"].toObject();
-
     QJsonObject jsonAns;
 
-    number a(toRational(coeffs["a"].toObject()));
-    number b(toRational(coeffs["b"].toObject()));
-    number c(toRational(coeffs["c"].toObject()));
-
-    if (jsonObj["type"].toString() == "value")
+    if (jsonObj["print_type"].toString() == "value")
     {
-        number x(toRational(coeffs["x"].toObject()));
-        number result = Polinom(a, b, c).calculate_polinom(x);
+        number result = Polinom<number>(a, b, c).calculate_polinom(*x);
 
         QString str_val;
         QTextStream ts(&str_val);
@@ -56,12 +43,12 @@ void App::rec(QByteArray requst)
         jsonAns.insert("type", "value");
         jsonAns.insert("val", str_val);
     }
-    else if (jsonObj["type"].toString() == "roots")
+    else if (jsonObj["print_type"].toString() == "roots")
     {
         jsonAns.insert("type", "roots");
 
         QString root_1, root_2;
-        if (auto opt_roots = Polinom(a, b, c).get_roots();
+        if (auto opt_roots = Polinom<number>(a, b, c).get_roots();
                 opt_roots.has_value())
         {
             auto [opt_root_1, opt_root_2] = *opt_roots;
@@ -82,18 +69,18 @@ void App::rec(QByteArray requst)
         jsonAns.insert("root_1", root_1);
         jsonAns.insert("root_2", root_2);
     }
-    else if (jsonObj["type"].toString() == "classic")
+    else if (jsonObj["print_type"].toString() == "classic")
     {
         QString str_polynom;
         QTextStream ts(&str_polynom);
-        ts << Polinom(a, b, c);
+        ts << Polinom<number>(a, b, c);
 
         jsonAns.insert("type", "classic");
         jsonAns.insert("polynom", str_polynom);
     }
-    else if (jsonObj["type"].toString() == "canonic")
+    else if (jsonObj["print_type"].toString() == "canonic")
     {
-        Polinom p(a, b, c);
+        Polinom<number> p(a, b, c);
         p.set_print_mode(PrintMode::CANONIC);
 
         QString str_polynom;
@@ -109,4 +96,40 @@ void App::rec(QByteArray requst)
     QByteArray dataArray = jsonDoc_ans.toJson();
 
     com_ptr->send_msg(dataArray);
+}
+
+
+void App::rec(QByteArray requst)
+{
+    QJsonParseError json_error;
+    QJsonDocument jsonDoc_req = QJsonDocument::fromJson(requst, &json_error);
+    if (json_error.error!= QJsonParseError::NoError)
+    {
+        qDebug() << "json error";
+        return;
+    }
+
+    QJsonObject jsonObj = jsonDoc_req.object();
+    QJsonObject coeffs = jsonObj["coeffs"].toObject();
+
+    if (jsonObj["number_type"].toString() == "real")
+    {
+        std::optional<Rational> x;
+        Rational a(toRational(coeffs["a"].toObject()));
+        Rational b(toRational(coeffs["b"].toObject()));
+        Rational c(toRational(coeffs["c"].toObject()));
+
+        if (jsonObj["print_type"] == "value")
+            x = toRational(coeffs["x"].toObject());
+
+        make_response<Rational>(jsonObj, a, b, c, x);
+    }
+    else if (jsonObj["number_type"].toString() == "int")
+    {
+        std::optional<int> x;
+        if (jsonObj["print_type"] == "value")
+            x = coeffs["x"].toInt();
+
+        make_response<int>(jsonObj, coeffs["a"].toInt(), coeffs["b"].toInt(), coeffs["c"].toInt(), x);
+    }
 }

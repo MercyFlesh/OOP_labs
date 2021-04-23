@@ -19,10 +19,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Network REQUIRED)
 set(PROJECT_SOURCES
         main.cpp
         app.cpp
-        polinom.cpp
         rational.cpp
         app.hpp
-        number.hpp
         rational.hpp
         polinom.hpp
         ../common/communicator.hpp
