@@ -52,7 +52,7 @@ Interface::Interface(QWidget *parent)
 
 void Interface::choice_file()
 {
-    file_name = QFileDialog::getOpenFileName(0, "Choice graph struct", "../lab_6", "*.csv");
+    file_name = QFileDialog::getOpenFileName(0, "Choice graph struct", "../", "*.csv");
     file_path_edit->setText(file_name);
 
     QFile file(file_name);
@@ -97,7 +97,6 @@ void Interface::choice_file()
     {
         error_label->setText("[-] File error: the number of columns and rows does not match");
         graph_ptr = nullptr;
-        return;
     }
     else
     {
@@ -108,5 +107,4 @@ void Interface::choice_file()
     }
 
     file.close();
-    graph_window->repaint();
 }

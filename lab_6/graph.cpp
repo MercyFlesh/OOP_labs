@@ -35,38 +35,51 @@ Matrix Graph::get_matrix() const
 
 QPoint Graph::find_point(QPoint start, QPoint end, qreal r) const
 {
-    qreal line_a = end.y() - start.y();
-    qreal line_b = start.x() - end.x();
-    qreal line_c = (-start.x() * (end.y() - start.y())) -
-              (-start.y() * (end.x() - start.x()));
-
-    qreal x_0 = start.x();
-    qreal y_0 = start.y();
-    qreal k = -line_a/line_b;
-    qreal b = -line_c/line_b;
-
-    qreal d = pow(2*k*b - 2*x_0 - 2*y_0*k, 2) -
-            (4 * (1 + pow(k, 2)) * (pow(b, 2) - pow(r, 2) + pow(x_0, 2) + pow(y_0, 2) - 2*y_0*b));
-
-    if (d > 0)
+    if (start.x() == end.x())
     {
-        qreal x1 = (-(2*k*b - 2*x_0-2*y_0*k) - sqrt(d))/(2 * (1 + pow(k, 2)));
-        qreal x2 = (-(2*k*b - 2*x_0-2*y_0*k) + sqrt(d))/(2 * (1 + pow(k, 2)));
-
-        if (start.x() < end.x())
-        {
-            if (start.x() < x1)
-                return QPoint(x1, k * x1 + b);
-            else
-                return QPoint(x2, k * x2 + b);
-        }
+        if (start.y() < end.y())
+            return QPoint(start.x(), start.y()+10);
         else
+            return QPoint(end.x(), start.y()-10);
+    }
+    else
+    {
+        qreal line_a = end.y() - start.y();
+        qreal line_b = start.x() - end.x();
+        qreal line_c = (-start.x() * (end.y() - start.y())) -
+                  (-start.y() * (end.x() - start.x()));
+
+        qreal x_0 = start.x();
+        qreal y_0 = start.y();
+        qreal k = -line_a/line_b;
+        qreal b = -line_c/line_b;
+
+
+        qreal d = pow(2*k*b - 2*x_0 - 2*y_0*k, 2) -
+                (4 * (1 + pow(k, 2)) * (pow(b, 2) - pow(r, 2) + pow(x_0, 2) + pow(y_0, 2) - 2*y_0*b));
+
+        if (d > 0)
         {
-            if (start.x() > x1)
-                return QPoint(x1, k * x1 + b);
+            qreal x1 = (-(2*k*b - 2*x_0-2*y_0*k) - sqrt(d))/(2 * (1 + pow(k, 2)));
+            qreal x2 = (-(2*k*b - 2*x_0-2*y_0*k) + sqrt(d))/(2 * (1 + pow(k, 2)));
+
+            if (start.x() < end.x())
+            {
+                if (start.x() < x1)
+                    return QPoint(x1, k * x1 + b);
+                else
+                    return QPoint(x2, k * x2 + b);
+            }
             else
-                return QPoint(x2, k * x2 + b);
+            {
+                if (start.x() > x1)
+                    return QPoint(x1, k * x1 + b);
+                else
+                    return QPoint(x2, k * x2 + b);
+            }
         }
+
+        return QPoint(INFINITY, INFINITY);
     }
 }
 
@@ -136,9 +149,11 @@ void Graph::draw(QPainter* p, QRect r, QColor c)
             }
             else if (matrix_[i][j] == 1)
             {
+
                 QPoint start_peak = find_point(t[i], t[j], 10);
                 QPoint end_peak = find_point(t[j], t[i], 10);
                 QLineF line(start_peak, end_peak);
+
 
                 angle = std::atan2(-line.dy(), line.dx());
                 head = line.p2();
