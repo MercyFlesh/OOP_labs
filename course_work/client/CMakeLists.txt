@@ -18,18 +18,20 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
-        interface.cpp
-	controlwindow.cpp
-	paramswindow.cpp
-	statewindow.cpp
         app.cpp
-        client.cpp
-        interface.hpp
         app.hpp
+        client.cpp
         client.hpp
+        interface.cpp
+        interface.hpp
+        controlwindow.cpp
         controlwindow.hpp
-	paramswindow.hpp
-	statewindow.hpp
+        paramswindow.cpp
+        paramswindow.hpp
+        statewindow.cpp
+        statewindow.hpp
+        notice.cpp
+        notice.hpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
