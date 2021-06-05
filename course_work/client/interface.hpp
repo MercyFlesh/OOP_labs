@@ -23,4 +23,10 @@ public:
     ~Interface() = default;
 
     void update_tabs(QJsonObject response);
+
+signals:
+    void send_data(QJsonObject);
+
+public slots:
+    void transfer_inf(QJsonObject data);
 };

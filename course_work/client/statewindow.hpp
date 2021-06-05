@@ -1,12 +1,16 @@
 #pragma once
 #include <QObject>
 #include <QWidget>
+#include <QComboBox>
 #include <QLabel>
 #include <QListWidget>
+#include <QTableWidget>
 #include <QPushButton>
-#include <QGridLayout>
 #include <QJsonObject>
 #include <QJsonArray>
+
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include <memory>
 
@@ -14,12 +18,12 @@ class StateWindow : public QWidget
 {
     Q_OBJECT
 
-    std::unique_ptr<QLabel> free_managers_label, busy_managers_label, queue_list_label;
-    std::unique_ptr<QListWidget> free_managers_list, busy_managers_list;
-    std::unique_ptr<QListWidget> queue_requests_list;
-    std::unique_ptr<QPushButton> update_free_btn, update_busy_btn, update_queue_btn;
+    std::unique_ptr<QTableWidget> states_table;
+    std::unique_ptr<QPushButton> update_btn;
+    std::unique_ptr<QComboBox> states_box;
 
-    std::unique_ptr<QGridLayout> grid_layout;
+    std::unique_ptr<QHBoxLayout> hbox_choice_layout;
+    std::unique_ptr<QVBoxLayout> main_layout;
 
 public:
     explicit StateWindow(QWidget* parent = nullptr);

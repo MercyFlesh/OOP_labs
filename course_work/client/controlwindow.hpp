@@ -14,6 +14,8 @@
 
 #include <memory>
 
+#include "notice.hpp"
+
 class ControlWindow : public QWidget
 {
     Q_OBJECT
@@ -25,8 +27,14 @@ class ControlWindow : public QWidget
 
     std::unique_ptr<QPushButton> add_send_btn, del_send_btn;
 
+    std::unique_ptr<QLabel> complete_task_label;
+    std::unique_ptr<QLineEdit> complete_id_task_edit;
+    std::unique_ptr<QPushButton> complete_task_btn;
+
     std::unique_ptr<QVBoxLayout> vbox_layout;
-    std::unique_ptr<QFormLayout> add_form_layout, del_from_layout;
+    std::unique_ptr<QFormLayout> add_form_layout, del_from_layout, complete_form_layout;
+
+    std::unique_ptr<Notice> notice;
 
 public:
     explicit ControlWindow(QWidget* parent = nullptr);
@@ -34,12 +42,12 @@ public:
 
     void update_control(QJsonObject response);
 
-private slots:
+public slots:
     void validate_form();
     void send_request();
     void delete_request();
+    void complete_request();
 
 signals:
-    void isValid();
     void send_control_req(QJsonObject request);
 };
