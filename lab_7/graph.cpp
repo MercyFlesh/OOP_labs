@@ -3,33 +3,27 @@
 
 
 Graph::Graph(Matrix matrix)
-    : matrix_(std::move(matrix)),
-      count_vertices(matrix_.size())
+    : transition_matrix_(std::move(matrix)),
+      count_vertices(transition_matrix_.size())
 {
 }
 
 
 void Graph::update(Matrix matrix)
 {
-    matrix_ = std::move(matrix);
-    count_vertices = matrix_.size();
-}
-
-
-void Graph::set_graph_window(std::weak_ptr<GraphWindow> graphWindow)
-{
-    graphWindow_ = std::move(graphWindow);
+    transition_matrix_ = std::move(matrix);
+    count_vertices = transition_matrix_.size();
 }
 
 int Graph::get_count_vertices() const
 {
-    return matrix_.size();
+    return transition_matrix_.size();
 }
 
 
 Matrix Graph::get_matrix() const
 {
-    return matrix_;
+    return transition_matrix_;
 }
 
 
@@ -97,13 +91,13 @@ void Graph::draw(QPainter* p, QRect r, QColor c)
     p->setBrush(QBrush(c));
     p->setFont(font);
 
-    std::vector<QPoint> t(count_vertices);
-    for (std::size_t i = 0; i < t.size(); i++)
+    vertices_pos.resize(count_vertices);
+    for (std::size_t i = 0; i < vertices_pos.size(); i++)
     {
-        t[i] = QPoint(cw+cr*sin(i*a), ch-cr*cos(i*a));
-        p->drawEllipse(t[i], 10, 10);
-        p->drawText(QRect(t[i].x() - 7, t[i].y() - 7, 15, 15),
-                    QString().setNum(i), QTextOption(Qt::AlignCenter));
+        vertices_pos[i] = QPoint(cw+cr*sin(i*a), ch-cr*cos(i*a));
+        p->drawEllipse(vertices_pos[i], 10, 10);
+        p->drawText(QRect(vertices_pos[i].x() - 7, vertices_pos[i].y() - 7, 15, 15),
+                    QString().setNum(i + 1), QTextOption(Qt::AlignCenter));
     }
 
     p->setPen(QPen((Qt::black), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -111,49 +105,48 @@ void Graph::draw(QPainter* p, QRect r, QColor c)
     QPointF head, arrowP1, arrowP2;
     double angle;
     qreal arrowSize = 10;
-    for (std::size_t i = 0; i < matrix_.size(); ++i)
+
+    for (std::size_t i = 0; i < transition_matrix_.size(); ++i)
     {
-        for (std::size_t j = 0; j < matrix_[i].size(); ++j)
+        for (std::size_t j = 0; j < transition_matrix_[i].size(); ++j)
         {
-            if ((i == j) && (matrix_[i][j] == 1))
+            if ((i == j) && (transition_matrix_[i][j] == 1))
             {
-                if (t[i].x() >= r.size().width() / 2 && t[i].y() < r.size().height() / 2)
+                if (vertices_pos[i].x() >= r.size().width() / 2 && vertices_pos[i].y() < r.size().height() / 2)
                 {
                     angle = 1.07 * M_PI;
-                    head = QPoint(t[i].x() + 10, t[i].y());
+                    head = QPoint(vertices_pos[i].x() + 10, vertices_pos[i].y());
 
-                    p->drawArc(t[i].x(), t[i].y() - 27, 25, 25, 16 * - 70, 16 * 270);
+                    p->drawArc(vertices_pos[i].x(), vertices_pos[i].y() - 27, 25, 25, 16 * - 70, 16 * 270);
                 }
-                else if (t[i].x() > r.size().width() / 2 && t[i].y() >= r.size().height() / 2)
+                else if (vertices_pos[i].x() > r.size().width() / 2 && vertices_pos[i].y() >= r.size().height() / 2)
                 {
                     angle = 0.57 * M_PI;
-                    head = QPoint(t[i].x(), t[i].y() + 10);
+                    head = QPoint(vertices_pos[i].x(), vertices_pos[i].y() + 10);
 
-                    p->drawArc(t[i].x(), t[i].y(), 25, 25, 16 * - 180, 16 * 270);
+                    p->drawArc(vertices_pos[i].x(), vertices_pos[i].y(), 25, 25, 16 * - 180, 16 * 270);
                 }
-                else if (t[i].x() <= r.size().width() / 2 && t[i].y() > r.size().height() / 2)
+                else if (vertices_pos[i].x() <= r.size().width() / 2 && vertices_pos[i].y() > r.size().height() / 2)
                 {
                     angle = 0.1 * M_PI;
-                    head = QPoint(t[i].x() - 10, t[i].y());
+                    head = QPoint(vertices_pos[i].x() - 10, vertices_pos[i].y());
 
-                    p->drawArc(t[i].x() - 25, t[i].y(), 25, 25, 16 * - 270, 16 * 270);
+                    p->drawArc(vertices_pos[i].x() - 25, vertices_pos[i].y(), 25, 25, 16 * - 270, 16 * 270);
                 }
-                else if (t[i].x() < r.size().width() / 2 && t[i].y() <= r.size().height() / 2)
+                else if (vertices_pos[i].x() < r.size().width() / 2 && vertices_pos[i].y() <= r.size().height() / 2)
                 {
                     angle = 1.57 * M_PI;
-                    head = QPoint(t[i].x(), t[i].y() - 10);
+                    head = QPoint(vertices_pos[i].x(), vertices_pos[i].y() - 10);
 
-                    p->drawArc(t[i].x() - 25, t[i].y() - 25, 25, 25, 16 * - 360, 16 * 270);
+                    p->drawArc(vertices_pos[i].x() - 25, vertices_pos[i].y() - 25, 25, 25, 16 * - 360, 16 * 270);
                 }
 
             }
-            else if (matrix_[i][j] == 1)
+            else if (transition_matrix_[i][j] == 1)
             {
-
-                QPoint start_peak = find_point(t[i], t[j], 10);
-                QPoint end_peak = find_point(t[j], t[i], 10);
+                QPoint start_peak = find_point(vertices_pos[i], vertices_pos[j], 10);
+                QPoint end_peak = find_point(vertices_pos[j], vertices_pos[i], 10);
                 QLineF line(start_peak, end_peak);
-
 
                 angle = std::atan2(-line.dy(), line.dx());
                 head = line.p2();
@@ -169,4 +162,16 @@ void Graph::draw(QPainter* p, QRect r, QColor c)
             p->drawPolygon(QPolygonF() << head << arrowP2 << arrowP1);
         }
     }
+}
+
+
+QVector<QPoint> Graph::get_vertices_pos() const
+{
+    return vertices_pos;
+}
+
+
+QPoint Graph::get_vertex_pos(int number_vertex) const
+{
+    return vertices_pos[number_vertex];
 }

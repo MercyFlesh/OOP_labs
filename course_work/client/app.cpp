@@ -8,10 +8,8 @@ App::App(int argc, char* argv[])
 {
     interface_ptr->show();
 
-    connect(this, SIGNAL(send_control_req(QJsonObject)), this, SLOT(send(QJsonObject)));
-    connect(this, SIGNAL(send_state_req(QJsonObject)), this, SLOT(send(QJsonObject)));
-    connect(this, SIGNAL(send_params_req(QJsonObject)), this, SLOT(send(QJsonObject)));
-    connect(this, SIGNAL(accept_response(QByteArray)), this, SLOT(accept(QByteArray)));
+    connect(interface_ptr.get(), SIGNAL(send_data(QJsonObject)), this, SLOT(send(QJsonObject)));
+    connect(client_ptr.get(), SIGNAL(accept_response(QByteArray)), this, SLOT(accept(QByteArray)));
 }
 
 

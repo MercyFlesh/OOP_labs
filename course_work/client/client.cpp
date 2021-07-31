@@ -30,6 +30,7 @@ void Client::readyRead()
     if(socket_ptr->waitForConnected(500))
     {
         QByteArray data = socket_ptr->readAll();
+
         emit accept_response(data);
     }
 }
@@ -39,7 +40,7 @@ void Client::send_data(QByteArray data)
 {
     if(socket_ptr->state() == QAbstractSocket::ConnectedState)
     {
-            socket_ptr->write(data);
-            socket_ptr->waitForBytesWritten(500);
+        socket_ptr->write(data);
+        socket_ptr->waitForBytesWritten(500);
     }
 }

@@ -1,5 +1,7 @@
 #include "graphwindow.hpp"
 
+#include <QDebug>
+
 
 GraphWindow::GraphWindow(QWidget* parent)
     : QWidget(parent)
