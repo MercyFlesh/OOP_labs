@@ -13,6 +13,6 @@ typedef int number;
 следует заменить на
 
 ```c++
-#include «rational.h»
+#include "rational.h"
 typedef TRational number;
 ```
